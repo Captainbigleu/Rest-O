@@ -3,10 +3,14 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id: number;
 
-    @Column()
-    firstName: string
+    @Column({ type: 'character varying' })
+    name: string;
 
-    @Column()
-    lastName: string}
+    @Column({ type: 'character varying' })
+    password: string;
+
+    @Column({ type: 'boolean', default: false })
+    admin: boolean;
+}
