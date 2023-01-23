@@ -1,8 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Commande } from "./Commande"
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    OneToMany,
+    BaseEntity,
+} from 'typeorm';
+import { Commande } from './Commande';
 
 @Entity()
-export class User {
+export class Users extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -16,5 +22,5 @@ export class User {
     admin: boolean;
 
     @OneToMany(() => Commande, (commande) => commande.id)
-    commandes: Commande[]
+    commandes: Commande[];
 }

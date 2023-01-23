@@ -4,8 +4,10 @@ import {
     PrimaryGeneratedColumn,
     ManyToMany,
     JoinTable,
+    ManyToOne,
 } from 'typeorm';
 import { Commande } from './Commande';
+import { Restaurant } from './Restaurant';
 
 @Entity()
 export class Menus {
@@ -18,7 +20,6 @@ export class Menus {
     @Column({ type: 'money' })
     prix: string;
 
-    @ManyToMany(() => Commande)
-    @JoinTable()
-    commandes: Commande[];
+    @ManyToOne(() => Commande, (commande) => commande.id)
+    commande: Commande;
 }
