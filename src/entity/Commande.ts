@@ -5,15 +5,6 @@ export class Commande {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'integer' })
-    id_restaurant: number;
-
-    @Column({ type: 'character varying' })
-    menu: string;
-
     @Column({ type: 'money' })
     prix: string;
-
-    @Column({ type: 'integer'})
-    user_id: number;
 }

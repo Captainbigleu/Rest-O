@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.myDataSource = void 0;
 var dotenv = require("dotenv");
-dotenv.config({ path: '.env' });
 var typeorm_1 = require("typeorm");
+dotenv.config({ path: '.env' });
 exports.myDataSource = new typeorm_1.DataSource({
     type: 'postgres',
     host: process.env.TYPEORM_HOST,
