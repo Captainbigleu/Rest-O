@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    ManyToMany,
+    JoinTable,
+} from 'typeorm';
+import { Commande } from './Commande';
 
 @Entity()
 export class Menus {
@@ -10,4 +17,8 @@ export class Menus {
 
     @Column({ type: 'money' })
     prix: string;
+
+    @ManyToMany(() => Commande)
+    @JoinTable()
+    commandes: Commande[];
 }
