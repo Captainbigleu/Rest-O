@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from "typeorm"
+import { Commande } from "./Commande";
+import { Menus } from "./Menus";
 
 @Entity()
 export class Restaurant {
@@ -7,4 +9,12 @@ export class Restaurant {
 
     @Column({ type: 'character varying' })
     ville: string;
+
+    @OneToMany(() => Commande, (commande) => commande.id)
+    commandes: Commande[]
+
+    @ManyToMany(() => Menus)
+    @JoinTable()
+    menus: Menus[]
+
 }
