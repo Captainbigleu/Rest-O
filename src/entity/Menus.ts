@@ -5,7 +5,7 @@ export class Menus {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'char varying' })
+    @Column({ type: 'character varying' })
     nom: string;
 
     @Column({ type: 'money' })
