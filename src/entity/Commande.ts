@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Menus } from './Menus';
-import { Restaurant } from './Restaurant';
-import { Users } from './User';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm"
+import { Menus } from "./Menus";
+import { Restaurant } from "./Restaurant";
+import { Users } from "./User";
 
 @Entity()
 export class Commande {

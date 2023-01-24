@@ -3,14 +3,13 @@ import {
     Column,
     PrimaryGeneratedColumn,
     OneToMany,
-    ManyToMany,
-    JoinTable,
+    BaseEntity,
+   
 } from 'typeorm';
 import { Commande } from './Commande';
-import { Menus } from './Menus';
 
 @Entity()
-export class Restaurant {
+export class Restaurant extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -19,4 +18,10 @@ export class Restaurant {
 
     @OneToMany(() => Commande, (commande) => commande.id)
     commandes: Commande[];
+
+    static findByVille (ville: string) {
+        return this. createQueryBuilder("restaurant")
+        .where("restaurant.ville = :ville", {ville} )
+        .getMany()
+    }
 }
