@@ -1,4 +1,4 @@
-export type TArticles = {
+export type TCommande = {
     id: number;
     prix: string;
 };

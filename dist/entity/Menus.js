@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Menus = void 0;
 var typeorm_1 = require("typeorm");
+var Commande_1 = require("./Commande");
 var Menus = /** @class */ (function () {
     function Menus() {
     }
@@ -26,6 +27,10 @@ var Menus = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: 'money' }),
         __metadata("design:type", String)
     ], Menus.prototype, "prix", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Commande_1.Commande; }, function (commande) { return commande.id; }),
+        __metadata("design:type", Commande_1.Commande)
+    ], Menus.prototype, "commande", void 0);
     Menus = __decorate([
         (0, typeorm_1.Entity)()
     ], Menus);

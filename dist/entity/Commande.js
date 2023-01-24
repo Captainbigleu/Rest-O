@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Commande = void 0;
 var typeorm_1 = require("typeorm");
+var Menus_1 = require("./Menus");
+var Restaurant_1 = require("./Restaurant");
+var User_1 = require("./User");
 var Commande = /** @class */ (function () {
     function Commande() {
     }
@@ -19,21 +22,21 @@ var Commande = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Commande.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: 'integer' }),
-        __metadata("design:type", Number)
-    ], Commande.prototype, "id_restaurant", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: 'character varying' }),
-        __metadata("design:type", String)
-    ], Commande.prototype, "menu", void 0);
-    __decorate([
         (0, typeorm_1.Column)({ type: 'money' }),
         __metadata("design:type", String)
     ], Commande.prototype, "prix", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: 'integer' }),
-        __metadata("design:type", Number)
-    ], Commande.prototype, "user_id", void 0);
+        (0, typeorm_1.ManyToOne)(function () { return User_1.Users; }, function (user) { return user.id; }),
+        __metadata("design:type", User_1.Users)
+    ], Commande.prototype, "user", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Restaurant_1.Restaurant; }, function (restaurant) { return restaurant.id; }),
+        __metadata("design:type", Restaurant_1.Restaurant)
+    ], Commande.prototype, "restaurant", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Menus_1.Menus; }, function (menu) { return menu.id; }),
+        __metadata("design:type", Menus_1.Menus)
+    ], Commande.prototype, "menu", void 0);
     Commande = __decorate([
         (0, typeorm_1.Entity)()
     ], Commande);
