@@ -4,7 +4,6 @@ import {
     PrimaryGeneratedColumn,
     OneToMany,
     BaseEntity,
-   
 } from 'typeorm';
 import { Commande } from './Commande';
 
@@ -19,9 +18,9 @@ export class Restaurant extends BaseEntity {
     @OneToMany(() => Commande, (commande) => commande.id)
     commandes: Commande[];
 
-    static findByVille (ville: string) {
-        return this. createQueryBuilder("restaurant")
-        .where("restaurant.ville = :ville", {ville} )
-        .getMany()
+    static findByVille(ville: string) {
+        return this.createQueryBuilder('restaurant')
+            .where('restaurant.ville = :ville', { ville })
+            .getMany();
     }
 }
