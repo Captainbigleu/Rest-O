@@ -23,4 +23,12 @@ export class Users extends BaseEntity {
 
     @OneToMany(() => Commande, (commande) => commande.id)
     commandes: Commande[];
+
+    static getUser(id: number) {
+        return this.createQueryBuilder()
+            .select('users.id')
+            .from(Users, 'users')
+            .where('users.id = :id', { id: id })
+            .getOne();
+}
 }

@@ -1,7 +1,8 @@
 import * as express from 'express';
 import { myDataSource } from './app-data-source';
+import { commandeRouter } from './routes/commandeRouter';
 import { restaurantRouter } from './routes/restaurantRouter';
-
+//import { JwtPayload } from 'jsonwebtoken';
 // establish database connection
 myDataSource
     .initialize()
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // register routes
 app.use('/api/restaurant', restaurantRouter);
+app.use('/api/commande', commandeRouter);
 app.use('/*', (req, res) => {
     res.status(404).json({
         status: 'FAIL',
