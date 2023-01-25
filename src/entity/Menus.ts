@@ -1,13 +1,5 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    ManyToMany,
-    JoinTable,
-    ManyToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Commande } from './Commande';
-import { Restaurant } from './Restaurant';
 
 @Entity()
 export class Menus {
@@ -18,7 +10,7 @@ export class Menus {
     nom: string;
 
     @Column({ type: 'money' })
-    prix: string;
+    prix: number;
 
     @ManyToOne(() => Commande, (commande) => commande.id)
     commande: Commande;

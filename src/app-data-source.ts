@@ -14,6 +14,6 @@ export const myDataSource = new DataSource({
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
     entities: [Commande, Menus, Restaurant, Users],
-    logging: true,
+    logging: false,
     synchronize: true,
 });

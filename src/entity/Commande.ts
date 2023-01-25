@@ -10,7 +10,7 @@ export class Commande extends BaseEntity {
     id: number;
 
     @Column({ type: 'money' })
-    prix: string;
+    prix: number;
 
     @ManyToOne(() => Users, (user) => user.id)
     user: Users;
