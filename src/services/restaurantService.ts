@@ -47,7 +47,7 @@ export class RestaurantService {
 
     async updateVille(
         ville: string,
-        restauId: string
+        restauId: number
     ): Promise<TRestaurant | undefined> {
         const changeVille = await Restaurant.changeRestau(ville, restauId);
 
@@ -57,7 +57,7 @@ export class RestaurantService {
         return undefined;
     }
 
-    async deleteRestaurant(restauId: string): Promise<TRestaurant | undefined> {
+    async deleteRestaurant(restauId: number): Promise<TRestaurant | undefined> {
         const changeVille = await Restaurant.deleteRestau(restauId);
 
         if (changeVille) {
@@ -66,7 +66,7 @@ export class RestaurantService {
         return undefined;
     }
 
-    async getRestauById(restauId: string): Promise<TRestaurant | undefined> {
+    async getRestauById(restauId: number): Promise<TRestaurant | undefined> {
         const getRestau = await Restaurant.getRestauById(restauId);
 
         if (getRestau) {

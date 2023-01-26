@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserService } from '../services/userService';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { EStatus, TApiResponse } from '../types/TStatus';
 
 const userService = new UserService();
 
@@ -22,17 +23,17 @@ export class UserController {
                 );
 
                 res.status(200).json({
-                    status: 'success',
+                    status: EStatus.OK,
                     message: 'Utilisateur enregistré',
                     data: registerOk.raw,
-                });
+                } as TApiResponse);
             });
         } catch (err) {
             console.log(err);
             res.status(500).json({
-                status: 'Erreur',
+                status: EStatus.FAILED,
                 message: 'erreur serveur',
-            });
+            } as TApiResponse);
         }
     }
 
@@ -44,9 +45,9 @@ export class UserController {
 
             if (!name || !password) {
                 return res.status(400).json({
-                    status: 'FAIL',
+                    status: EStatus.FAILED,
                     message: `Données manquantes !`,
-                });
+                } as TApiResponse);
             }
             console.log(user);
 
@@ -60,29 +61,29 @@ export class UserController {
 
                     if (result) {
                         res.status(200).json({
-                            status: 'OK',
+                            status: EStatus.OK,
                             message: `Vous êtes bien connecté.e !!`,
                             token: token,
                         });
                     } else {
                         res.status(401).json({
-                            status: 'FAIL',
+                            status: EStatus.FAILED,
                             message: 'Le mot de passe incorrect !',
-                        });
+                        } as TApiResponse);
                     }
                 });
             } else {
                 res.status(400).json({
-                    status: 'FAIL',
+                    status: EStatus.FAILED,
                     message: `${name} n'a pas de compte !!`,
-                });
+                } as TApiResponse);
             }
         } catch (error) {
             console.log(error);
             res.status(500).json({
-                status: 'ERROR',
+                status: EStatus.FAILED,
                 message: `!!! ERREUR !!!`,
-            });
+            } as TApiResponse);
         }
     }
 }
