@@ -24,11 +24,26 @@ export class Users extends BaseEntity {
     @OneToMany(() => Commande, (commande) => commande.id)
     commandes: Commande[];
 
+    static registerUser(name: string, password: string, admin: boolean) {
+        return this.createQueryBuilder()
+            .insert()
+            .into(Users)
+            .values([{ name: name, password: password, admin: admin }])
+            .returning('*')
+            .execute();
+    }
+    static logUser(name: string) {
+        return this.createQueryBuilder()
+            .select('users')
+            .from(Users, 'users')
+            .where('users.name = :name', { name })
+            .getOne();
+    }
     static getUser(id: number) {
         return this.createQueryBuilder()
             .select('users.id')
             .from(Users, 'users')
             .where('users.id = :id', { id: id })
             .getOne();
-}
+    }
 }

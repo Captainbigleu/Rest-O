@@ -61,7 +61,7 @@ export class Restaurant extends BaseEntity {
             .execute();
     }
 
-    static changeRestau(ville: string, id: string) {
+    static changeRestau(ville: string, id: number) {
         return this.createQueryBuilder()
             .update(Restaurant)
             .set({ ville: ville })

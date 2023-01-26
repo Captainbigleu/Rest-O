@@ -47,7 +47,7 @@ export class RestaurantService {
 
     async updateVille(
         ville: string,
-        restauId: string,
+        restauId: number
     ): Promise<TRestaurant | undefined> {
         const changeVille = await Restaurant.changeRestau(ville, restauId);
 

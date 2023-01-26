@@ -1,5 +1,5 @@
 export type TMenus = {
     id: number;
     nom: string;
-    prix: string;
+    prix: number;
 };

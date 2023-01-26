@@ -1,8 +1,10 @@
 import * as express from 'express';
 import { myDataSource } from './app-data-source';
 import { commandeRouter } from './routes/commandeRouter';
+import { menuRouter } from './routes/menuRouter';
 import { restaurantRouter } from './routes/restaurantRouter';
-//import { JwtPayload } from 'jsonwebtoken';
+import { userRouter } from './routes/userRouter';
+
 // establish database connection
 myDataSource
     .initialize()
@@ -20,6 +22,8 @@ app.use(express.json());
 // register routes
 app.use('/api/restaurant', restaurantRouter);
 app.use('/api/commande', commandeRouter);
+app.use('/api/user', userRouter);
+app.use('/api/menu', menuRouter);
 app.use('/*', (req, res) => {
     res.status(404).json({
         status: 'FAIL',
