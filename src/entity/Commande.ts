@@ -1,5 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } 
-from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity }
+    from "typeorm"
 import { Menus } from "./Menus";
 import { Restaurant } from "./Restaurant";
 import { Users } from "./User";
@@ -9,7 +9,7 @@ export class Commande extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'money' })
+    @Column({ type: 'numeric' })
     prix: number;
 
     @ManyToOne(() => Users, (user) => user.id)
@@ -21,22 +21,34 @@ export class Commande extends BaseEntity {
     @ManyToOne(() => Menus, (menu) => menu.id)
     menu: Menus;
 
-static readCommande(userId: number) {
-    return this.createQueryBuilder('commande')
-    .where('commande.userId = :userId', {userId})
-    .getMany()
-}
-/* static readCommandesByRestaurant(restaurant: string) {
-    return this.createQueryBuilder('commande')
-    .where('readcommandesby.restaurant = :restaurant', {restaurant})
-}
-    static createCommande(user : Users) {
+    static readCommande(userId: number) {
         return this.createQueryBuilder('commande')
-        .where('createcommande.user = :user', {user})
+            .where('commande.userId = :userId', { userId })
+            .getMany()
     }
-
-    static editCommande(user: Users, id: number) {
+    static readCommandesByRestaurantId(restaurantId: number) {
         return this.createQueryBuilder('commande')
-        .where('')
-    } */
+            .where('commande.restaurantId = :restaurantId', { restaurantId })
+            .getMany()
+    }
+    static createCommande(prix: number, userId: number, restaurantId: number, menuId: number) {
+        return this.createQueryBuilder()
+            .insert()
+            .into(Commande)
+            .values([
+                { prix: prix, user: { id: userId }, restaurant: { id: restaurantId }, menu: { id: menuId } }
+            ])
+            .returning('*')
+            .execute()
+    }
+    static updateCommande(prix: number, menuId: number, commandeId: number) {
+        const result = this.createQueryBuilder()
+            .update(Commande)
+            .set({ prix: prix, menu: { id: menuId } })
+            .where("id = :id", { id: commandeId })
+            .returning('*')
+            .execute() 
+            console.log(result);
+            return result
+    }
 }

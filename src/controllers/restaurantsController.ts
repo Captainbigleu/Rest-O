@@ -147,7 +147,7 @@ export class RestaurantController {
     }
 
     async delRestaurant(req: Request, res: Response) {
-        const restauId: string = req.params.id;
+        const restauId = parseInt(req.params.id);
 
         if (Number.isNaN(Number(restauId))) {
             return res.status(404).json({

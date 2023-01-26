@@ -9,7 +9,7 @@ export class Menus {
     @Column({ type: 'character varying' })
     nom: string;
 
-    @Column({ type: 'money' })
+    @Column({ type: 'numeric' })
     prix: number;
 
     @ManyToOne(() => Commande, (commande) => commande.id)

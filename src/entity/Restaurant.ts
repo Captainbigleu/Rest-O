@@ -70,7 +70,7 @@ export class Restaurant extends BaseEntity {
             .execute();
     }
 
-    static deleteRestau(id: string) {
+    static deleteRestau(id: number) {
         return this.createQueryBuilder()
             .update(Restaurant)
             .set({ deleted_at: true })
@@ -79,7 +79,7 @@ export class Restaurant extends BaseEntity {
             .execute();
     }
 
-    static getRestauById(id: string) {
+    static getRestauById(id: number) {
         return this.createQueryBuilder()
             .select('restaurant.id')
             .from(Restaurant, 'restaurant')
