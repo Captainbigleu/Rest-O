@@ -71,11 +71,20 @@ export class RestaurantController {
 
     async createNewRest(req: Request, res: Response) {
         const ville = req.body.ville;
+        const admin = req.body.admin;
 
         if (ville === undefined) {
             return res.status(400).json({
                 status: 'Fail',
                 message: 'Donnée manquante',
+                data: null,
+            });
+        }
+
+        if (!admin === true) {
+            return res.status(403).json({
+                status: 'Fail',
+                message: 'Vous ne pouvez pas créer de restaurant !',
                 data: null,
             });
         }
@@ -104,7 +113,7 @@ export class RestaurantController {
     async putVille(req: Request, res: Response) {
         const ville = req.body.ville;
         const restauId = req.params.id;
-        console.log(restauId);
+        const admin = req.body.admin;
 
         if (Number.isNaN(Number(restauId))) {
             return res.status(404).json({
@@ -119,6 +128,14 @@ export class RestaurantController {
             return res.status(400).json({
                 status: 'Fail',
                 message: 'Donnée manquante',
+                data: null,
+            });
+        }
+
+        if (!admin === true) {
+            return res.status(403).json({
+                status: 'Fail',
+                message: 'Vous ne pouvez pas modifier ce restaurant !',
                 data: null,
             });
         }
@@ -148,12 +165,20 @@ export class RestaurantController {
 
     async delRestaurant(req: Request, res: Response) {
         const restauId: string = req.params.id;
+        const admin = req.body.admin;
 
         if (Number.isNaN(Number(restauId))) {
             return res.status(404).json({
                 status: 'FAIL',
                 message:
                     'Type de donnée attendu incorrect, type attendu Number',
+                data: null,
+            });
+        }
+        if (!admin === true) {
+            return res.status(403).json({
+                status: 'Fail',
+                message: 'Vous ne pouvez pas modifier ce restaurant !',
                 data: null,
             });
         }

@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { myDataSource } from './app-data-source';
+import { commandeRouter } from './routes/commandeRouter';
 import { restaurantRouter } from './routes/restaurantRouter';
 import { userRouter } from './routes/userRouter';
 
@@ -19,6 +20,7 @@ app.use(express.json());
 
 // register routes
 app.use('/api/restaurant', restaurantRouter);
+app.use('/api/commande', commandeRouter);
 app.use('/api/user', userRouter);
 app.use('/*', (req, res) => {
     res.status(404).json({

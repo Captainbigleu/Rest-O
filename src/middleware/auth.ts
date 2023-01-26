@@ -19,6 +19,7 @@ export function verifyToken(req: Request, res: Response, next: VoidFunction) {
                 });
             } else {
                 req.body.user_id = decoded.id;
+                req.body.admin = decoded.admin;
                 next();
             }
         });

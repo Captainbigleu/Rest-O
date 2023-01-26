@@ -11,10 +11,15 @@ export class UserController {
     async register(req: Request, res: Response) {
         const name: string = req.body.name;
         const password: string = req.body.password;
+        const admin: boolean = req.body.admin;
 
         try {
             bcrypt.hash(password, 10, async function (err, hash) {
-                const registerOk = await userService.register(name, hash);
+                const registerOk = await userService.register(
+                    name,
+                    hash,
+                    admin
+                );
 
                 res.status(200).json({
                     status: 'success',
@@ -50,7 +55,8 @@ export class UserController {
 
                 bcrypt.compare(password, hash, async (err, result) => {
                     const id = user.id;
-                    const token = jwt.sign({ id }, secreToken);
+                    const admin = user.admin;
+                    const token = jwt.sign({ id, admin }, secreToken);
 
                     if (result) {
                         res.status(200).json({
