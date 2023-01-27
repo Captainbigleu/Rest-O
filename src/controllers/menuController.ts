@@ -46,7 +46,7 @@ export class MenuController {
         }
     }
 
-    async newPrice(req: Request, res: Response) {
+    async changeMenu(req: Request, res: Response) {
         const prix: number = req.body.prix;
         const menuId: number = parseInt(req.params.id);
         const admin: boolean = req.body.admin;
@@ -63,7 +63,7 @@ export class MenuController {
         if (!prix) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: 'Donnée manquante',
+                message: 'Donnée manquante/incorrecte',
                 data: null,
             } as TApiResponse);
         }
@@ -172,6 +172,44 @@ export class MenuController {
                 message: 'Erreur serveur',
                 data: null,
             } as TApiResponse);
+        }
+    }
+
+    async menuById(req: Request, res: Response) {
+        const menuId: number = parseInt(req.params.id);
+
+        if (Number.isNaN(menuId)) {
+            return res.status(400).json({
+                status: EStatus.FAILED,
+                message:
+                    'Type de donnée attendu incorrect, type attendu Number',
+                data: null,
+            } as TApiResponse);
+        }
+
+        try {
+            const oneMenu = await menuService.getOneMenu(menuId);
+
+            if (!oneMenu) {
+                return res.status(404).json({
+                    status: EStatus.FAILED,
+                    message: 'Aucun menu trouvé, check ID',
+                    data: null,
+                } as TApiResponse);
+            }
+
+            res.status(200).json({
+                status: EStatus.OK,
+                message: 'Voici le menu demandé.',
+                data: oneMenu,
+            });
+        } catch (err) {
+            console.log(err);
+            return res.status(500).json({
+                status: EStatus.FAILED,
+                message: 'Erreur serveur',
+                data: null,
+            });
         }
     }
 }
