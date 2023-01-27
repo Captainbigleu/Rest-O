@@ -166,6 +166,18 @@ export class CommandesController {
 
         try {
 
+            const getMenu = await commandeService.getMenuById(menuId)
+            console.log(getMenu);
+            
+
+            if (!getMenu) {
+                return res.status(404).json({
+                    status: EStatus.FAILED,
+                    message: 'Ce menu n existe pas.',
+                    data: null,
+                } as TApiResponse);
+            }
+
             const getCommandeId = await commandeService.getCommandeById(commandeId)
 
             if (!getCommandeId) {

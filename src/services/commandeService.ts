@@ -1,6 +1,8 @@
 import { InsertResult, UpdateResult } from 'typeorm';
 import { Commande } from '../entity/Commande';
+import { Menus } from '../entity/Menus';
 import { TCommande } from '../types/TCommande';
+import { TMenus } from '../types/TMenus';
 
 export class CommandesService {
 
@@ -37,6 +39,15 @@ export class CommandesService {
 
         if (commande) {
             return commande;
+        }
+        return undefined;
+    }
+
+    async getMenuById(menuId: number): Promise<TMenus | undefined> {
+        const menu = await Menus.findOneBy({ id: menuId, deleted_at: false});
+
+        if (menu) {
+            return menu;
         }
         return undefined;
     }
