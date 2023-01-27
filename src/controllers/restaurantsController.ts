@@ -31,7 +31,7 @@ export class RestaurantController {
         }
     }
 
-    async getRestaurant(req: Request, res: Response) {
+    async getRestaurantByVille(req: Request, res: Response) {
         const ville = req.body.ville;
         if (ville === undefined) {
             return res.status(400).json({
@@ -142,6 +142,14 @@ export class RestaurantController {
         }
 
         try {
+            const getList = await restaurantService.getRestauById(restauId);
+            if (!getList) {
+                return res.status(404).json({
+                    status: EStatus.FAILED,
+                    message: 'Aucun restaurant trouvé, check ID',
+                    data: null,
+                } as TApiResponse);
+            }
             const newVille = await restaurantService.updateVille(
                 ville,
                 restauId

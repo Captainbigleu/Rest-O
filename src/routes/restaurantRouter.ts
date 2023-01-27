@@ -5,7 +5,7 @@ import { verifyToken } from '../middleware/auth';
 export const restaurantRouter = express.Router();
 const restaurantController = new RestaurantController();
 
-restaurantRouter.get('/search', restaurantController.getRestaurant);
+restaurantRouter.get('/search', restaurantController.getRestaurantByVille);
 
 restaurantRouter.get('/', restaurantController.getAllRestaurant);
 
