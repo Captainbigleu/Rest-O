@@ -17,6 +17,9 @@ export class Commande extends BaseEntity {
     @Column({ type: 'numeric' })
     prix: number;
 
+    @Column({type: 'boolean', default: false})
+    deleted_at: boolean;
+
     @ManyToOne(() => Users, (user) => user.id)
     user: Users;
 

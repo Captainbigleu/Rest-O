@@ -187,12 +187,12 @@ export class CommandesController {
 
             const updatecommande = await commandeService.updateOneCommande(prix, menuId, commandeId)
              
-           /*  res.status(200).json({
+           res.status(200).json({
                 status: EStatus.OK,
-                message: 'Votre commande a bien été créée.',
-                data: commande.raw,
+                message: 'Votre commande a bien été modifiée.',
+                data: updatecommande.raw,
             } as TApiResponse);
- */
+
         } catch (err) {
             console.log(err);
 

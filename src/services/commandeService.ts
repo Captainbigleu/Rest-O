@@ -1,4 +1,4 @@
-import { InsertResult } from 'typeorm';
+import { InsertResult, UpdateResult } from 'typeorm';
 import { Commande } from '../entity/Commande';
 import { TCommande } from '../types/TCommande';
 
@@ -31,13 +31,13 @@ export class CommandesService {
         }
         return undefined;
     }
-    async updateOneCommande(prix: number, menuId: number, commandeId: number): Promise<Commande | undefined> {
+    async updateOneCommande(prix: number, menuId: number, commandeId: number): Promise<UpdateResult | undefined> {
         const commande = await Commande.updateCommande(prix, menuId, commandeId);
         console.log(commande);
         
 
         if (commande) {
-            //return commande;
+            return commande;
         }
         return undefined;
     }
