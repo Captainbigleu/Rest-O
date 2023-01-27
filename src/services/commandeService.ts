@@ -3,16 +3,6 @@ import { Commande } from '../entity/Commande';
 import { TCommande } from '../types/TCommande';
 
 export class CommandesService {
-    async getCommandeByUserId(
-        userId: number
-    ): Promise<TCommande[] | undefined> {
-        const commande = await Commande.readCommande(userId);
-
-        if (commande) {
-            return commande;
-        }
-        return undefined;
-    }
 
     async getCommandesByRestaurantId(restaurantId: number): Promise<TCommande[] | undefined> {
         const commande = await Commande.readCommandesByRestaurantId(restaurantId);
@@ -34,7 +24,7 @@ export class CommandesService {
     async updateOneCommande(prix: number, menuId: number, commandeId: number): Promise<UpdateResult | undefined> {
         const commande = await Commande.updateCommande(prix, menuId, commandeId);
         console.log(commande);
-        
+
 
         if (commande) {
             return commande;
@@ -43,14 +33,24 @@ export class CommandesService {
     }
 
     async getCommandeById(commandeId: number): Promise<TCommande | undefined> {
-        const commande = await Commande.findOneBy({id: commandeId});
+        const commande = await Commande.findOneBy({ id: commandeId, deleted_at: false});
 
         if (commande) {
             return commande;
         }
         return undefined;
-
-
     }
+
+    async deleteCommande(commandeId: number): Promise<any | undefined> {
+        const commande = await Commande.deleteCommande(commandeId);
+        console.log(commande);
+
+
+        if (commande) {
+            return commande;
+        }
+        return undefined;
+    }
+
 
 }

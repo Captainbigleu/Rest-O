@@ -10,9 +10,9 @@ const restaurantService = new RestaurantService()
 
 export class CommandesController {
     async getCommande(req: Request, res: Response) {
-        const userId = parseInt(req.params.id);
+        const commandeId= parseInt(req.params.id);
 
-        if (Number.isNaN(Number(userId))) {
+        if (Number.isNaN(Number(commandeId))) {
             return res.status(400).json({
                 status: EStatus.FAILED,
                 message:
@@ -22,17 +22,8 @@ export class CommandesController {
         }
 
         try {
-            const user = await userService.getOneUser(userId);
-
-            if (!user) {
-                return res.status(404).json({
-                    status: EStatus.FAILED,
-                    message: 'Aucun utilisateur n existe pour cet id.',
-                    data: null,
-                } as TApiResponse);
-            }
-
-            const commande = await commandeService.getCommandeByUserId(userId);
+            
+            const commande = await commandeService.getCommandeById(commandeId);
 
             if (!commande) {
                 return res.status(404).json({
@@ -43,7 +34,7 @@ export class CommandesController {
             }
             res.status(200).json({
                 status: EStatus.OK,
-                message: 'Voici la (les) commande(s) recherchée(s).',
+                message: 'Voici la commande recherchée.',
                 data: commande,
             } as TApiResponse);
         } catch (err) {
@@ -133,8 +124,8 @@ export class CommandesController {
                 } as TApiResponse);
             } */
 
-             
-            const commande = await commandeService.createOneCommande(prix, userId,restaurantId, menuId)
+
+            const commande = await commandeService.createOneCommande(prix, userId, restaurantId, menuId)
             res.status(200).json({
                 status: EStatus.OK,
                 message: 'Votre commande a bien été créée.',
@@ -148,7 +139,7 @@ export class CommandesController {
                 status: EStatus.FAILED,
                 message: 'Erreur serveur.',
                 data: null,
-            }as TApiResponse);
+            } as TApiResponse);
         }
     }
 
@@ -186,8 +177,8 @@ export class CommandesController {
             }
 
             const updatecommande = await commandeService.updateOneCommande(prix, menuId, commandeId)
-             
-           res.status(200).json({
+
+            res.status(200).json({
                 status: EStatus.OK,
                 message: 'Votre commande a bien été modifiée.',
                 data: updatecommande.raw,
@@ -200,7 +191,48 @@ export class CommandesController {
                 status: EStatus.FAILED,
                 message: 'Erreur serveur.',
                 data: null,
-            }as TApiResponse);
+            } as TApiResponse);
+        }
+    }
+
+    async deleteCommandeById(req: Request, res: Response) {
+        const commandeId: number = parseInt(req.params.id)
+
+        if (Number.isNaN(commandeId)) {
+            return res.status(400).json({
+                status: EStatus.FAILED,
+                message: "Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.",
+                data: undefined
+            } as TApiResponse);
+        };
+
+        try {
+
+            const getCommandeId = await commandeService.getCommandeById(commandeId)
+
+            if (!getCommandeId) {
+                return res.status(404).json({
+                    status: EStatus.FAILED,
+                    message: 'Cette commande n existe pas.',
+                    data: null,
+                } as TApiResponse);
+            }
+            const deleteCommande = await commandeService.deleteCommande(commandeId)
+
+            res.status(200).json({
+                status: EStatus.OK,
+                message: 'Votre commande a bien été annulée.',
+                data: deleteCommande.raw,
+            } as TApiResponse);
+
+        } catch (err) {
+            console.log(err);
+
+            return res.status(500).json({
+                status: EStatus.FAILED,
+                message: 'Erreur serveur.',
+                data: null,
+            } as TApiResponse);
         }
     }
 }

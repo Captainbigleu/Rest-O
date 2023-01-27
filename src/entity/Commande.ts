@@ -29,14 +29,10 @@ export class Commande extends BaseEntity {
     @ManyToOne(() => Menus, (menu) => menu.id)
     menu: Menus;
 
-    static readCommande(userId: number) {
-        return this.createQueryBuilder('commande')
-            .where('commande.userId = :userId', { userId })
-            .getMany()
-    }
     static readCommandesByRestaurantId(restaurantId: number) {
         return this.createQueryBuilder('commande')
             .where('commande.restaurantId = :restaurantId', { restaurantId })
+            .andWhere("commande.deleted_at = false")
             .getMany()
     }
     static createCommande(prix: number, userId: number, restaurantId: number, menuId: number) {
@@ -52,7 +48,19 @@ export class Commande extends BaseEntity {
     static updateCommande(prix: number, menuId: number, commandeId: number) {
         const result = this.createQueryBuilder()
             .update(Commande)
-            .set({ prix: prix, menu: { id: menuId } })
+            .set({prix: prix, menu: { id: menuId }})
+            .where("id = :id", { id: commandeId })
+            .andWhere("deleted_at = false")
+            .returning('*')
+            .execute() 
+            console.log(result);
+            return result
+    }
+
+    static deleteCommande(commandeId: number) {
+        const result = this.createQueryBuilder()
+            .update(Commande)
+            .set({deleted_at: true})
             .where("id = :id", { id: commandeId })
             .returning('*')
             .execute() 

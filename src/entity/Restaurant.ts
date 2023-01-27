@@ -84,6 +84,7 @@ export class Restaurant extends BaseEntity {
             .select('restaurant.id')
             .from(Restaurant, 'restaurant')
             .where('restaurant.id = :id', { id: id })
+            .andWhere("restaurant.deleted_at = false")
             .getOne();
     }
 }

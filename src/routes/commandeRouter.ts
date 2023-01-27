@@ -8,3 +8,4 @@ commandeRouter.get('/:id', commandeController.getCommande);
 commandeRouter.get('/restaurant/:id', commandeController.getCommandeByRestaurantId);
 commandeRouter.post('/', commandeController.createNewCommande);
 commandeRouter.put('/:id', commandeController.updateNewCommande);
+commandeRouter.put('/delete/:id', commandeController.deleteCommandeById);
