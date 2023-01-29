@@ -49,7 +49,6 @@ export class UserController {
                     message: `Données manquantes !`,
                 } as TApiResponse);
             }
-            console.log(user);
 
             if (user) {
                 const hash = user.password;

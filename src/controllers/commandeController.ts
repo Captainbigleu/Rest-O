@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
 import { CommandesService } from '../services/commandeService';
-import { UserService } from '../services/userService';
-import { EStatus, TApiResponse } from "../types/TStatus";
-import { RestaurantService } from "../services/restaurantService"
+import { EStatus, TApiResponse } from '../types/TStatus';
+import { RestaurantService } from '../services/restaurantService';
+import { MenuService } from '../services/menuService';
 
 const commandeService = new CommandesService();
-const userService = new UserService()
-const restaurantService = new RestaurantService()
+const restaurantService = new RestaurantService();
+const menuService = new MenuService();
 
 export class CommandesController {
-    async getCommande(req: Request, res: Response) {
-        const commandeId= parseInt(req.params.id);
+    async getOneCommande(req: Request, res: Response) {
+        const commandeId = parseInt(req.params.id);
+        const userId = req.body.user_id;
+        const admin = req.body.admin;
 
         if (Number.isNaN(Number(commandeId))) {
             return res.status(400).json({
@@ -22,8 +24,9 @@ export class CommandesController {
         }
 
         try {
-            
             const commande = await commandeService.getCommandeById(commandeId);
+            console.log(commande.user.id);
+            console.log(userId);
 
             if (!commande) {
                 return res.status(404).json({
@@ -32,10 +35,17 @@ export class CommandesController {
                     data: undefined,
                 } as TApiResponse);
             }
-            res.status(200).json({
-                status: EStatus.OK,
-                message: 'Voici la commande recherchée.',
-                data: commande,
+            if (userId === commande.user.id || admin) {
+                return res.status(200).json({
+                    status: EStatus.OK,
+                    message: 'Voici la commande recherchée.',
+                    data: commande,
+                } as TApiResponse);
+            }
+            return res.status(403).json({
+                status: EStatus.FAILED,
+                message: 'Accès à cetre commande refusée',
+                data: null,
             } as TApiResponse);
         } catch (err) {
             console.log(err);
@@ -47,19 +57,30 @@ export class CommandesController {
             } as TApiResponse);
         }
     }
-    async getCommandeByRestaurantId(req: Request, res: Response) {
 
+    async getCommandeByRestaurantId(req: Request, res: Response) {
         const restaurantId = parseInt(req.params.id);
+        const admin = req.body.admin;
 
         if (Number.isNaN(restaurantId)) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: "Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.",
-                data: undefined
+                message:
+                    'Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.',
+                data: null,
             } as TApiResponse);
-        };
+        }
+        if (!admin) {
+            return res.status(403).json({
+                status: EStatus.FAILED,
+                message: 'Accès refusé',
+                data: null,
+            } as TApiResponse);
+        }
         try {
-            const restaurant = await restaurantService.getRestauById(restaurantId)
+            const restaurant = await restaurantService.getRestauById(
+                restaurantId
+            );
 
             if (!restaurant) {
                 return res.status(404).json({
@@ -69,15 +90,15 @@ export class CommandesController {
                 } as TApiResponse);
             }
 
-            const commandesResto = await commandeService.getCommandesByRestaurantId(restaurantId)
-
+            const commandesResto =
+                await commandeService.getCommandesByRestaurantId(restaurantId);
 
             res.status(200).json({
                 status: EStatus.OK,
-                message: 'Voici la (les) commande(s) recherchée(s) pour ce restaurant.',
+                message:
+                    'Voici la (les) commande(s) recherchée(s) pour ce restaurant.',
                 data: commandesResto,
             } as TApiResponse);
-
         } catch (err) {
             console.log(err);
 
@@ -89,49 +110,40 @@ export class CommandesController {
         }
     }
     async createNewCommande(req: Request, res: Response) {
-        const prix: number = req.body.prix
-        const userId: number = req.body.userId
-        const restaurantId: number = req.body.restaurantId
-        const menuId: number = req.body.menuId
+        const menuId: number = req.body.menuId;
+        const userId: number = req.body.user_id;
+        console.log(req.body);
 
-        if (!prix || !userId || !restaurantId || !menuId) {
+        if (!menuId) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: 'Une des données est manquante, veuillez corriger svp.',
+                message:
+                    'Une des données est manquante, veuillez corriger svp.',
                 data: null,
             } as TApiResponse);
         }
 
         try {
-
-            const restaurant = await restaurantService.getRestauById(restaurantId)
-
-            if (!restaurant) {
-                return res.status(404).json({
-                    status: EStatus.FAILED,
-                    message: 'Il n y a pas de restaurant correspondant à votre requête.',
-                    data: null,
-                } as TApiResponse);
-            }
-
-            /* const menu = await menuService.getOneUser(menuId)
+            const menu = await menuService.getOneMenu(menuId);
 
             if (!menu) {
                 return res.status(404).json({
                     status: EStatus.FAILED,
-                    message: 'Le menu que vous avez choisi n existe pas, veuillez changer svp.',
+                    message:
+                        'Le menu que vous avez choisi n existe pas, veuillez changer svp.',
                     data: null,
                 } as TApiResponse);
-            } */
+            }
 
-
-            const commande = await commandeService.createOneCommande(prix, userId, restaurantId, menuId)
+            const commande = await commandeService.createOneCommande(
+                userId,
+                menuId
+            );
             res.status(200).json({
                 status: EStatus.OK,
                 message: 'Votre commande a bien été créée.',
                 data: commande.raw,
             } as TApiResponse);
-
         } catch (err) {
             console.log(err);
 
@@ -144,29 +156,33 @@ export class CommandesController {
     }
 
     async updateNewCommande(req: Request, res: Response) {
-        const prix: number = req.body.prix
-        const menuId: number = req.body.menuId
-        const commandeId: number = parseInt(req.params.id)
+        const menuId: number = req.body.menuId;
+        const commandeId: number = parseInt(req.params.id);
+        const admin: boolean = req.body.admin;
+        const userId = req.body.user_id;
 
         if (Number.isNaN(commandeId)) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: "Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.",
-                data: undefined
+                message:
+                    'Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.',
+                data: undefined,
             } as TApiResponse);
-        };
+        }
 
-        if (!prix || !menuId) {
+        if (!menuId) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: 'Une ou des données sont manquantes, veuillez corriger svp.',
+                message:
+                    'Une ou des données sont manquantes, veuillez corriger svp.',
                 data: null,
             } as TApiResponse);
         }
 
         try {
-
-            const getCommandeId = await commandeService.getCommandeById(commandeId)
+            const getCommandeId = await commandeService.getCommandeById(
+                commandeId
+            );
 
             if (!getCommandeId) {
                 return res.status(404).json({
@@ -176,14 +192,35 @@ export class CommandesController {
                 } as TApiResponse);
             }
 
-            const updatecommande = await commandeService.updateOneCommande(prix, menuId, commandeId)
+            const getMenu = await menuService.getOneMenu(menuId);
 
-            res.status(200).json({
-                status: EStatus.OK,
-                message: 'Votre commande a bien été modifiée.',
-                data: updatecommande.raw,
+            if (!getMenu) {
+                return res.status(404).json({
+                    status: EStatus.FAILED,
+                    message: 'Ce menu n existe pas.',
+                    data: null,
+                } as TApiResponse);
+            }
+
+            const updatecommande = await commandeService.updateOneCommande(
+                menuId,
+                commandeId
+            );
+            console.log(userId);
+            console.log(getCommandeId.user.id);
+
+            if (userId === getCommandeId.user.id || admin) {
+                return res.status(200).json({
+                    status: EStatus.OK,
+                    message: 'Votre commande a bien été modifiée.',
+                    data: updatecommande.raw,
+                } as TApiResponse);
+            }
+            return res.status(403).json({
+                status: EStatus.FAILED,
+                message: 'Accès à cette commande refusée',
+                data: null,
             } as TApiResponse);
-
         } catch (err) {
             console.log(err);
 
@@ -196,19 +233,23 @@ export class CommandesController {
     }
 
     async deleteCommandeById(req: Request, res: Response) {
-        const commandeId: number = parseInt(req.params.id)
+        const commandeId: number = parseInt(req.params.id);
+        const admin: boolean = req.body.admin;
+        const userId = req.body.user_id;
 
         if (Number.isNaN(commandeId)) {
             return res.status(400).json({
                 status: EStatus.FAILED,
-                message: "Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.",
-                data: undefined
+                message:
+                    'Syntaxe incorrecte, veuillez vérifier que vous avez bien rentré un nombre.',
+                data: undefined,
             } as TApiResponse);
-        };
+        }
 
         try {
-
-            const getCommandeId = await commandeService.getCommandeById(commandeId)
+            const getCommandeId = await commandeService.getCommandeById(
+                commandeId
+            );
 
             if (!getCommandeId) {
                 return res.status(404).json({
@@ -217,14 +258,23 @@ export class CommandesController {
                     data: null,
                 } as TApiResponse);
             }
-            const deleteCommande = await commandeService.deleteCommande(commandeId)
+            if (userId === getCommandeId.user.id || admin) {
+                const deleteCommande = await commandeService.deleteCommande(
+                    commandeId
+                );
 
-            res.status(200).json({
-                status: EStatus.OK,
-                message: 'Votre commande a bien été annulée.',
-                data: deleteCommande.raw,
-            } as TApiResponse);
-
+                return res.status(200).json({
+                    status: EStatus.OK,
+                    message: 'Votre commande a bien été annulée.',
+                    data: deleteCommande.raw,
+                } as TApiResponse);
+            } else {
+                return res.status(403).json({
+                    status: EStatus.FAILED,
+                    message: 'Accès à cette commande refusée',
+                    data: null,
+                } as TApiResponse);
+            }
         } catch (err) {
             console.log(err);
 

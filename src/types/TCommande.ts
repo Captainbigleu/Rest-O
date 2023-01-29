@@ -1,5 +1,6 @@
 export type TCommande = {
+    user: any;
     id: number;
-    prix: number;
     deleted_at: boolean;
+    userId?: number | boolean;
 };

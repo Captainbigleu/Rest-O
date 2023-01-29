@@ -18,6 +18,7 @@ export class UserService {
 
     async getDataUserByName(name: string): Promise<TUser | undefined> {
         const data = await Users.logUser(name);
+        console.log(data);
 
         if (data) {
             return data;

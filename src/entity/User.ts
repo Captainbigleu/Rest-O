@@ -15,10 +15,10 @@ export class Users extends BaseEntity {
     @Column({ type: 'character varying' })
     name: string;
 
-    @Column({ type: 'character varying' })
+    @Column({ type: 'character varying', select: false })
     password: string;
 
-    @Column({ type: 'boolean', default: false })
+    @Column({ type: 'boolean', default: false, select: false })
     admin: boolean;
 
     @OneToMany(() => Commande, (commande) => commande.id)
@@ -36,6 +36,8 @@ export class Users extends BaseEntity {
         return this.createQueryBuilder()
             .select('users')
             .from(Users, 'users')
+            .addSelect('users.password')
+            .addSelect('users.admin')
             .where('users.name = :name', { name })
             .getOne();
     }
