@@ -67,7 +67,7 @@ export class UserController {
                     } else {
                         res.status(401).json({
                             status: EStatus.FAILED,
-                            message: 'Le mot de passe incorrect !',
+                            message: 'Le mot de passe est incorrect !',
                         } as TApiResponse);
                     }
                 });
